@@ -1,0 +1,27 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<Transaction>
+  <EffectiveDate STATUS="Enabled" TYPE="SYSTEM" />
+  <Math>
+    <MathVariables>
+      <MathVariable VARIABLENAME="asCodeCommunicationSubjectRefusal" TYPE="VALUE" DATATYPE="TEXT">999</MathVariable>
+      <MathVariable VARIABLENAME="policyGuid" TYPE="FIELD" DATATYPE="TEXT">Policy:PolicyGuid</MathVariable>
+      <MathVariable VARIABLENAME="transactionGuid" TYPE="VALUE" DATATYPE="TEXT">b31ee9f2-5c25-437a-ab6b-d916ae4bb024</MathVariable>
+      <MathVariable VARIABLENAME="sequenceExecutionCondition" TYPE="EXPRESSION" DATATYPE="BOOLEAN">asCodeCommunicationSubjectRefusal &lt;&gt; '999'</MathVariable>
+      <MathVariable VARIABLENAME="activityExecutionCondition" TYPE="VALUE" DATATYPE="BOOLEAN">True</MathVariable>
+      <MathVariable VARIABLENAME="activityReason" TYPE="VALUE" DATATYPE="TEXT">SomeReason</MathVariable>
+      <MathVariable VARIABLENAME="communicationActivityArray" TYPE="ACTIVITYARRAY" DATATYPE="ACTIVITY" OPERATION="CREATE">0</MathVariable>
+      <MathVariable VARIABLENAME="communicationActivity" TYPE="ACTIVITY" DATATYPE="ACTIVITY" LEVEL="POLICY" TARGET="policyGuid" OPERATION="CREATE">transactionGuid</MathVariable>
+      <MathVariable VARIABLENAME="communicationActivity" TYPE="ACTIVITY" DATATYPE="TEXT" OPERATION="SETVALUE" FIELDNAME="Subject">asCodeCommunicationSubjectRefusal</MathVariable>
+      <MathVariable VARIABLENAME="communicationActivityArray" TYPE="ACTIVITYARRAY" DATATYPE="ACTIVITY" OPERATION="APPEND" SOURCEARRAY="communicationActivityArray">communicationActivity</MathVariable>
+      <MathVariable VARIABLENAME="otherActivity" TYPE="ACTIVITY" DATATYPE="ACTIVITY" LEVEL="POLICY" TARGET="policyGuid" OPERATION="CREATE">transactionGuid</MathVariable>
+      <MathVariable VARIABLENAME="otherActivity" TYPE="ACTIVITY" DATATYPE="DATE" OPERATION="SETVALUE" FIELDNAME="EffectiveDate">EffectiveDate</MathVariable>
+      <MathVariable VARIABLENAME="otherActivity" TYPE="ACTIVITY" DATATYPE="TEXT" OPERATION="SETVALUE" FIELDNAME="Subject">asCodeCommunicationSubjectRefusal</MathVariable>
+      <MathVariable VARIABLENAME="otherActivity" TYPE="ACTIVITY" DATATYPE="TEXT" OPERATION="SETVALUE" FIELDNAME="Reason">activityReason</MathVariable>
+      <MathVariable VARIABLENAME="communicationActivityArray" TYPE="ACTIVITYARRAY" DATATYPE="ACTIVITY" OPERATION="APPEND" SOURCEARRAY="communicationActivityArray">otherActivity</MathVariable>
+    </MathVariables>
+  </Math>
+  <ActivitySequence NAME="SpawnCommunication" IF="sequenceExecutionCondition = true">
+    <Activity PROCESSIMMEDIATE="Yes">communicationActivityArray</Activity>
+    <Activity PROCESSIMMEDIATE="No" IF="activityExecutionCondition = true">otherActivity</Activity>
+  </ActivitySequence>
+</Transaction>
